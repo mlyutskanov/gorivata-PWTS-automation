@@ -56,11 +56,22 @@ The status test passes, the content test fails:
 TILE_URL_TEMPLATE='https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png' npm run test:api
 ```
 
+## Evidence in the report
+
+Every run attaches, even when tests pass:
+
+- **UI test:** a screenshot of the map page.
+- **Both content checks:** `checked-tile.png` (the exact tile that was checked) and
+  `tile-measurements.json` (size, colours, dominant-colour ratio, SHA-256).
+
+Open a test in the HTML report and scroll to **Attachments**.
+
 ## CI (GitHub Actions)
 
 `.github/workflows/nightly.yml` runs every day at 03:00 UTC, on pull requests, and manually
 (**Actions → Nightly map tile checks → Run workflow**). The HTML report is uploaded as an
-artifact for 14 days.
+artifact for 14 days. To view it: open the run → **Summary** → **Artifacts** →
+`playwright-report` → unzip → open `index.html`.
 
 One-time setup in the GitHub repo:
 

@@ -15,6 +15,6 @@ test.describe('Tile provider API', () => {
     const response = await request.get(tileUrl(SOFIA_CENTRE));
     expect(response.ok()).toBe(true);
 
-    expectRealMapTile(await response.body());
+    await expectRealMapTile(await response.body());
   });
 });

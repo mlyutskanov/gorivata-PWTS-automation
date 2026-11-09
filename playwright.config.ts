@@ -32,6 +32,8 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: process.env.BASE_URL,
         viewport: { width: 1280, height: 720 },
+        // Always keep a screenshot as nightly evidence of how the map rendered.
+        screenshot: 'on',
       },
     },
   ],

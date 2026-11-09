@@ -20,7 +20,7 @@ test('station map loads real map tiles for Sofia city centre', async ({ page, ba
     new URL(TILE_URL_TEMPLATE).host,
   );
   expect(response.status()).toBe(200);
-  expectRealMapTile(await response.body());
+  await expectRealMapTile(await response.body());
 
   const { z, x, y } = SOFIA_CENTRE;
   const tile = page.locator(`img.leaflet-tile[src*="/${z}/${x}/${y}"]`);

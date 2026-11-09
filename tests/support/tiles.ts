@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { expect } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 import { PNG } from 'pngjs';
 
 export type Tile = { z: number; x: number; y: number };
@@ -47,8 +47,13 @@ export function analyzeTile(body: Buffer) {
 // A real map tile of a city centre is busy: roads, buildings, labels, parks.
 // Measured baseline (2026-11): real Sofia tile = 256 colours, dominant 10.8%;
 // placeholder = 16 colours, dominant 96.9%. Thresholds sit far from both.
-export function expectRealMapTile(body: Buffer) {
+export async function expectRealMapTile(body: Buffer) {
   const tile = analyzeTile(body);
+  await test.info().attach('checked-tile.png', { body, contentType: 'image/png' });
+  await test.info().attach('tile-measurements.json', {
+    body: JSON.stringify(tile, null, 2),
+    contentType: 'application/json',
+  });
   expect(tile.sha256, 'tile is the known "API KEY REQUIRED" placeholder').not.toBe(
     KNOWN_PLACEHOLDER_SHA256,
   );
