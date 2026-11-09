@@ -1,8 +1,8 @@
 # map-tile-checks
 
-Nightly Playwright + TypeScript checks for the map layer of Product A.
+Nightly Playwright + TypeScript checks for the map layer of [Gorivata.bg](https://gorivata.bg).
 
-**Why it exists (BUG-001):** the map's previous tile provider ended keyless access. Every tile
+**Why it exists (BUG-001):** the map's previous tile provider, CARTO, ended keyless access. Every tile
 request still returned `HTTP 200` with a valid `image/png`, but the image was an
 "API KEY REQUIRED" placeholder, so users saw a blank, watermarked map. A status-code check
 alone stays green in that situation. These tests check the tile *content* as well.
@@ -49,7 +49,7 @@ npm run report      # open the last HTML report
 Expected runtime: about 10 seconds locally (API tests under 1 s, UI test about 5 s), plus a
 one-time ~1 minute browser download.
 
-To see the suite catch BUG-001, point the API tests at the old provider's keyless endpoint.
+To see the suite catch BUG-001, point the API tests at CARTO's keyless endpoint.
 The status test passes, the content test fails:
 
 ```bash
@@ -85,7 +85,7 @@ Open a test in the HTML report and scroll to **Attachments**.
 
 - **Run Summary page:** pass/fail table, tile measurements, and the checked tile and map
   screenshot shown inline. Open the run from the **Actions** tab.
-- **Full report online:** `https://mlyutskanov.github.io/gorivata-PWTS-automation/`, also linked from the Summary.
+- **Full report online:** https://mlyutskanov.github.io/gorivata-PWTS-automation/, also linked from the Summary.
   Only the latest run is kept.
 - **Zipped report:** the `playwright-report` artifact on each run, kept for 14 days. Extract the
   whole zip before opening `index.html`, or the images won't load.
