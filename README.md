@@ -68,24 +68,46 @@ Open a test in the HTML report and scroll to **Attachments**.
 
 ## CI (GitHub Actions)
 
-`.github/workflows/nightly.yml` runs every day at 03:00 UTC, on pull requests, and manually
-(**Actions → Nightly map tile checks → Run workflow**).
+`.github/workflows/nightly.yml` runs:
 
-After each scheduled or manual run, the **`publish-report`** job deploys the report to GitHub
-Pages and writes the run's **Summary** page: a pass/fail table, the tile measurements, the
-screenshots inline, and a link to the full report online. Pages keeps only the latest run, so
-older summaries' images stop loading; every run also keeps the zipped report as the
-`playwright-report` artifact for 14 days (extract the zip fully before opening `index.html`).
-Pull-request runs test only and do not publish.
+- every day at 03:00 UTC (scheduled)
+- on demand: **Actions → Nightly map tile checks → Run workflow → Run workflow**
+- on pull requests (tests only, nothing is published)
 
-One-time setup in the GitHub repo:
+### Jobs
 
-1. **Settings → Secrets and variables → Actions → Variables → New repository variable**
-2. Name `BASE_URL`, value = the app's URL. Save.
-3. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+| Job | What it does | Typical time |
+|---|---|---|
+| `playwright` | Installs Chromium, typechecks, runs the 3 tests, uploads the zipped report, builds the Pages site | ~40 s |
+| `publish-report` | Deploys the report to GitHub Pages and writes the run's **Summary** page | ~20 s |
 
-Notes:
+### Where to see results
 
+- **Run Summary page:** pass/fail table, tile measurements, and the checked tile and map
+  screenshot shown inline. Open the run from the **Actions** tab.
+- **Full report online:** `https://<owner>.github.io/<repo>/`, also linked from the Summary.
+  Only the latest run is kept.
+- **Zipped report:** the `playwright-report` artifact on each run, kept for 14 days. Extract the
+  whole zip before opening `index.html`, or the images won't load.
+
+GitHub Pages caches the site for a few minutes, so a run's Summary images may show as broken
+for 1–2 minutes after it finishes; refresh the page. Once a newer run is published, older
+runs' Summary images stop loading, but their zipped report is still available.
+
+### One-time setup
+
+1. **Settings → Secrets and variables → Actions → Variables** tab → **New repository variable**
+   → Name `BASE_URL`, Value = the app's URL → **Add variable**.
+   It must be a *repository* variable. A variable inside an Environment isn't visible to this
+   workflow, and the UI test then fails with `set BASE_URL to the app under test`.
+2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+   Do this before the first run, or `publish-report` fails with
+   `Ensure GitHub Pages has been enabled`. The first deployment can take a few minutes.
+
+### Notes
+
+- On a free GitHub plan, Pages works only for public repositories. If the repository becomes
+  private, `publish-report` fails; the tests and the zipped report still work.
 - GitHub emails failed scheduled runs to the person who last edited the cron line.
 - GitHub pauses scheduled workflows after 60 days without repository activity.
 - The API tests send an identifying `User-Agent`, as required by the tile server's usage policy.
