@@ -1,0 +1,25 @@
+{
+  "name": "map-tile-checks",
+  "version": "1.0.0",
+  "description": "Nightly checks that the map tile layer serves real map imagery",
+  "scripts": {
+    "test": "playwright test",
+    "test:api": "playwright test --project=api",
+    "test:ui": "playwright test --project=ui",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report"
+  },
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^26.6.6",
+    "@types/pngjs": "^6.0.5",
+    "dotenv": "^18.0.10",
+    "pngjs": "^7.0.0",
+    "typescript": "^7.0.2"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  }
+}
