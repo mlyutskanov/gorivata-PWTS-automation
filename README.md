@@ -85,7 +85,7 @@ Open a test in the HTML report and scroll to **Attachments**.
 
 - **Run Summary page:** pass/fail table, tile measurements, and the checked tile and map
   screenshot shown inline. Open the run from the **Actions** tab.
-- **Full report online:** `https://<owner>.github.io/<repo>/`, also linked from the Summary.
+- **Full report online:** `https://mlyutskanov.github.io/gorivata-PWTS-automation/`, also linked from the Summary.
   Only the latest run is kept.
 - **Zipped report:** the `playwright-report` artifact on each run, kept for 14 days. Extract the
   whole zip before opening `index.html`, or the images won't load.
