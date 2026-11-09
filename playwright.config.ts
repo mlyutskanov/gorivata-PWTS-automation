@@ -10,7 +10,7 @@ export default defineConfig({
   retries: isCI ? 1 : 0,
   timeout: 30_000,
   reporter: isCI
-    ? [['github'], ['html', { open: 'never' }]]
+    ? [['github'], ['html', { open: 'never' }], ['json', { outputFile: 'reports/results.json' }]]
     : [['list'], ['html', { open: 'never' }]],
   use: {
     trace: 'retain-on-failure',

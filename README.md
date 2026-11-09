@@ -69,14 +69,20 @@ Open a test in the HTML report and scroll to **Attachments**.
 ## CI (GitHub Actions)
 
 `.github/workflows/nightly.yml` runs every day at 03:00 UTC, on pull requests, and manually
-(**Actions → Nightly map tile checks → Run workflow**). The HTML report is uploaded as an
-artifact for 14 days. To view it: open the run → **Summary** → **Artifacts** →
-`playwright-report` → unzip → open `index.html`.
+(**Actions → Nightly map tile checks → Run workflow**).
+
+After each scheduled or manual run, the **`publish-report`** job deploys the report to GitHub
+Pages and writes the run's **Summary** page: a pass/fail table, the tile measurements, the
+screenshots inline, and a link to the full report online. Pages keeps only the latest run, so
+older summaries' images stop loading; every run also keeps the zipped report as the
+`playwright-report` artifact for 14 days (extract the zip fully before opening `index.html`).
+Pull-request runs test only and do not publish.
 
 One-time setup in the GitHub repo:
 
 1. **Settings → Secrets and variables → Actions → Variables → New repository variable**
 2. Name `BASE_URL`, value = the app's URL. Save.
+3. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
 
 Notes:
 

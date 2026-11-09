@@ -10,6 +10,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   playwright:
     runs-on: ubuntu-latest
@@ -38,3 +41,42 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
+
+      - name: Build report site
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+        run: node scripts/build-report-site.mjs
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+        with:
+          name: site-summary
+          path: site-summary.md
+          retention-days: 1
+
+      - uses: actions/upload-pages-artifact@v3
+        if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+        with:
+          path: site/
+
+  publish-report:
+    needs: playwright
+    if: ${{ !cancelled() && github.event_name != 'pull_request' }}
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - id: deploy
+        uses: actions/deploy-pages@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: site-summary
+
+      - name: Write job summary with screenshots
+        env:
+          PAGES_URL: ${{ steps.deploy.outputs.page_url }}
+        run: sed "s#{{PAGES_URL}}#${PAGES_URL}#g" site-summary.md >> "$GITHUB_STEP_SUMMARY"
